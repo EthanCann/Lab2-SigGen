@@ -13,9 +13,9 @@ Initially, we are provided with the sinegen.py file which uses a simple for loop
 
 However, this address can't increment on its own hence a counter is needed to do this at each clock cycle. These two modules are linked together using singen.sv which simply acts as a communication point between the two modules. As shown below, each internal signal in counter is connected through to rom with one exception of using an extrenal signal "address" because rom.sv has no such signal name count.
 
-![Connecting modules](/screenshots/Screenshot2025-11-04225114.png)
+![Connecting modules](screenshots/Screenshot2025-11-04225114.png)
 
-Now. to actually simulate the sinwave on Vbduddy, we need to create a testbench file called sinegen_tb.cpp. Here are the lines we needed to change or add from standard code:
+Now, to actually simulate the sinwave on Vbduddy, we need to create a testbench file called sinegen_tb.cpp. Here are the lines we needed to change or add from standard code:
 - *Line 1:* Including Vsinegen.h module so it can be used.
 - *Line 12:* Assigning top to be Vsinegen and not some other function.
 - *Line 17:* Storing the recorded data in a file named sinegen.vcd.
@@ -36,4 +36,8 @@ Now. to actually simulate the sinwave on Vbduddy, we need to create a testbench 
 
 ## Task 2: Sine and Cosine Dual Wave Generation
 
-For this task, I got rid of the incr signals everywhere because I assumed the task meant that frequency is kept constant. Therefore, I added a new signal logic called offset which will add on the extra jump on the address of second sine wave. This is done in sinegen.sv by creating another internal logic called address2 = address1 + offset which is fed into the rom to allow the next rom memory value of dout2 to be incremented accordingly and hence going out of phase.
+### Overview
+Instead of using the rotary encoder to alter the frequency of the wave generated, we used it to set the phase shift between two generated sine waves.
+
+### Depper Review
+For this task, I required a way of keeping the frequency constant (so got rid of incr logic) but being able to change "how ahead" the second generated sine wave was of the first one. One thing to consider was that when there is an offset, it needs to be a constant phase difference between the two waves, which meant that at each clock cycle, I needed to increment address of sinewave one and address of sinewave two by 1 while keeping the offset. This is achieved in sinegen.sv by assigning an internal logic called address2 = address1 + offset which is fed into the rom to allow the next rom memory value of dout2 to be jump ahead accordingly and hence shifting the phase.
